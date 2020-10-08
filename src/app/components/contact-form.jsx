@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Space, Form, Input, Button, Select, Divider } from 'antd';
-import {
-  PlusCircleOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-const FormList = Form.List;
+import { getFormValues, convertArrayToObject } from '../utils/utils';
+
 const FormItem = Form.Item;
 
 const formItemLayoutWithOutLabel = {
@@ -20,17 +17,9 @@ class ContactForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      contacts: [
-        { id: uuidv4(), type: '', value: '' },
-        { id: uuidv4(), type: '', value: '' },
-        { id: uuidv4(), type: '', value: '' },
-      ],
+      contacts: [],
     };
   }
-
-  handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
 
   remove = (id) => {
     this.setState((prevState) => {
@@ -56,6 +45,28 @@ class ContactForm extends Component {
     });
   };
 
+  handleInputChange = (index, e) => {
+    const { contacts } = this.state;
+    const values = [...contacts];
+
+    values[index].value = e.target.value;
+
+    this.setState({
+      contacts: values,
+    });
+  };
+
+  handleSelectChange = (index, value) => {
+    const { contacts } = this.state;
+    const values = [...contacts];
+
+    values[index].type = value;
+
+    this.setState({
+      contacts: values,
+    });
+  };
+
   render() {
     const { contacts } = this.state;
     const types = [
@@ -63,6 +74,10 @@ class ContactForm extends Component {
       { label: 'Phone', value: 'Phone' },
       { label: 'Link', value: 'Link' },
     ];
+
+    console.log(contacts);
+    console.log(getFormValues(contacts));
+    console.log(convertArrayToObject(getFormValues(contacts)));
 
     return (
       <Form {...formItemLayoutWithOutLabel}>
@@ -76,21 +91,20 @@ class ContactForm extends Component {
           {contacts.map((contact, index) => {
             const { id } = contact;
             return (
-              <Space
-                key={`contact_${index}`}
-                style={{ display: 'flex' }}
-                align="start"
-              >
+              <Space key={id} style={{ display: 'flex' }} align="start">
                 <FormItem>
                   <Select
                     placeholder="Select a label"
                     options={types}
                     style={{ width: 150 }}
-                    onChange={this.handleChange}
+                    onChange={(value) => this.handleSelectChange(index, value)}
                   />
                 </FormItem>
                 <FormItem>
-                  <Input placeholder="Enter a value" />
+                  <Input
+                    placeholder="Enter a value"
+                    onChange={(e) => this.handleInputChange(index, e)}
+                  />
                 </FormItem>
 
                 <MinusCircleOutlined
