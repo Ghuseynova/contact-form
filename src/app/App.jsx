@@ -1,11 +1,19 @@
 import React from 'react';
-
+import { PageHeader, Row, Col } from 'antd';
 import ContactForm from './components/contact-form';
 
 const App = () => {
   return (
     <>
-      <ContactForm />
+      <div className="wrapper">
+        <PageHeader title="Add new contact" style={{ textAlign: 'center' }} />
+
+        <Row justify="center">
+          <Col>
+            <ContactForm />
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };
