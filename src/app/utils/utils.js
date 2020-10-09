@@ -6,12 +6,10 @@ const getFormValues = (dataArr) => {
 
   if (dataArr !== undefined || dataArr.length !== 0) {
     dataArr.forEach((data) => {
-      console.log(data);
       valuesObj.type.push(data.type.toLowerCase());
       valuesObj.value.push(data.value);
     });
   }
-  console.log(valuesObj);
 
   return valuesObj;
 };
@@ -23,8 +21,6 @@ const convertArrayToObject = (obj) => {
   type.forEach((tItem, index) =>
     objArr.push({ type: tItem, value: value[index] })
   );
-
-  console.log(objArr);
 
   return objArr;
 };

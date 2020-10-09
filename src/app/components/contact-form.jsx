@@ -76,6 +76,22 @@ class ContactForm extends Component {
     console.log('Converted Values: ', convertedValues);
   };
 
+  validate = (rule, value, callback) => {
+    const { field } = rule;
+
+    try {
+      if (field === 'phone' && isNaN(Number(value))) {
+        throw new Error('Please enter a number');
+      } else if (field === 'email' && !value.includes('@')) {
+        throw new Error('Please enter correct email');
+      } else if (field === 'link' && !value.includes('https')) {
+        throw new Error('Please enter correct url');
+      }
+    } catch (err) {
+      callback(err);
+    }
+  };
+
   render() {
     const { contacts } = this.state;
     const types = [
@@ -83,10 +99,6 @@ class ContactForm extends Component {
       { label: 'Phone', value: 'Phone' },
       { label: 'Link', value: 'Link' },
     ];
-
-    console.log(contacts);
-    console.log(getFormValues(contacts));
-    console.log(convertArrayToObject(getFormValues(contacts)));
 
     return (
       <Form {...formItemLayoutWithOutLabel}>
@@ -101,7 +113,13 @@ class ContactForm extends Component {
             const { id, type } = contact;
             return (
               <Space key={id} style={{ display: 'flex' }} align="start">
-                <FormItem>
+                <FormItem
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
                   <Select
                     placeholder="Select a type"
                     options={types}
@@ -109,9 +127,15 @@ class ContactForm extends Component {
                     onChange={(value) => this.handleSelectChange(index, value)}
                   />
                 </FormItem>
-                <FormItem>
+                <FormItem
+                  name={type !== '' ? type.toLowerCase() : ''}
+                  rules={[
+                    {
+                      validator: this.validate,
+                    },
+                  ]}
+                >
                   <Input
-                    name={type !== '' ? type.toLowerCase() : ''}
                     placeholder={
                       type !== ''
                         ? `Enter ${type.toLowerCase()}`
@@ -143,7 +167,7 @@ class ContactForm extends Component {
         </div>
         <Divider />
 
-        <Button type="primary" onClick={this.handleSubmit}>
+        <Button type="primary" onClick={this.handleSubmit} htmlType="submit">
           Submit
         </Button>
       </Form>
