@@ -67,6 +67,15 @@ class ContactForm extends Component {
     });
   };
 
+  handleSubmit = () => {
+    const { contacts } = this.state;
+    const values = getFormValues(contacts);
+    const convertedValues = convertArrayToObject(values);
+
+    console.log('Values: ', values);
+    console.log('Converted Values: ', convertedValues);
+  };
+
   render() {
     const { contacts } = this.state;
     const types = [
@@ -82,19 +91,19 @@ class ContactForm extends Component {
     return (
       <Form {...formItemLayoutWithOutLabel}>
         <Space>
-          <p style={{ width: 150, marginBottom: '0' }}>Label</p>
+          <p style={{ width: 150, marginBottom: '0' }}>Type</p>
           <p style={{ marginBottom: '0' }}>Value</p>
         </Space>
         <Divider style={{ marginTop: '0.5rem' }} />
 
         <div>
           {contacts.map((contact, index) => {
-            const { id } = contact;
+            const { id, type } = contact;
             return (
               <Space key={id} style={{ display: 'flex' }} align="start">
                 <FormItem>
                   <Select
-                    placeholder="Select a label"
+                    placeholder="Select a type"
                     options={types}
                     style={{ width: 150 }}
                     onChange={(value) => this.handleSelectChange(index, value)}
@@ -102,7 +111,12 @@ class ContactForm extends Component {
                 </FormItem>
                 <FormItem>
                   <Input
-                    placeholder="Enter a value"
+                    name={type !== '' ? type.toLowerCase() : ''}
+                    placeholder={
+                      type !== ''
+                        ? `Enter ${type.toLowerCase()}`
+                        : 'Enter a value'
+                    }
                     onChange={(e) => this.handleInputChange(index, e)}
                   />
                 </FormItem>
@@ -127,6 +141,11 @@ class ContactForm extends Component {
             </Button>
           </Form.Item>
         </div>
+        <Divider />
+
+        <Button type="primary" onClick={this.handleSubmit}>
+          Submit
+        </Button>
       </Form>
     );
   }

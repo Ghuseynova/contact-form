@@ -9,7 +9,7 @@ const App = () => {
         <PageHeader title="Add new contact" style={{ textAlign: 'center' }} />
 
         <Row justify="center">
-          <Col>
+          <Col span={12}>
             <ContactForm />
           </Col>
         </Row>
